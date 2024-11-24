@@ -1,0 +1,28 @@
+$pre: "--g-theme-";
+
+$colors: (
+  primary: "#{$pre}primary",
+  secondary: "#{$pre}secondary",
+  background: "#{$pre}background",
+  surface: "#{$pre}surface",
+  error: "#{$pre}error",
+  success: "#{$pre}success",
+  "on-primary": "#{$pre}on-primary",
+  "on-secondary": "#{$pre}on-secondary",
+  "on-background": "#{$pre}on-background",
+  "on-surface": "#{$pre}on-surface",
+  "on-error": "#{$pre}on-error",
+  "on-success": "#{$pre}on-success"
+);
+
+@each $key, $value in $colors {
+  .text-#{$key} {
+    color: rgba(var(#{$value}));
+  }
+}
+
+@each $key, $value in $colors {
+  .bg-#{$key} {
+    background-color: rgba(var(#{$value}));
+  }
+}
