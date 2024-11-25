@@ -4,3 +4,27 @@ body {
   background-color: rgba(var(--g-theme-background));
   color: rgba(var(--g-theme-on-background));
 }
+
+h1,
+h2,
+h3 {
+  all: unset;
+  font-family: "G Head", sans-serif;
+  display: block;
+}
+
+h1 {
+  font-size: 2rem;
+}
+
+h2 {
+  font-size: 1.5rem;
+}
+
+h3 {
+  font-size: 1rem;
+}
+
+p {
+  margin: 0;
+}
