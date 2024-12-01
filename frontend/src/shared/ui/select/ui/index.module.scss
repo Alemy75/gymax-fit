@@ -1,0 +1,24 @@
+.g-select {
+  .e-plate {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    height: 40px;
+    width: 100%;
+    box-sizing: border-box;
+    border: 1px solid
+      color-mix(
+        in srgb,
+        currentColor calc(var(--opacity-border) * 100%),
+        transparent
+      );
+
+    .e-arrow {
+      transition: transform 0.2s ease;
+      &.m-arrow-rotated {
+        transform: rotate(180deg);
+      }
+    }
+  }
+}

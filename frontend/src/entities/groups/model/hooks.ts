@@ -20,8 +20,7 @@ export const useGroups = (): IGroupsReturn => {
 
       if (!data) return;
 
-      setGroups(() => data);
-
+      setGroups(data);
       setIsSuccess(true);
     } catch {
       setIsError(true);

@@ -1,0 +1,24 @@
+.e-modal {
+  position: fixed;
+  bottom: 0;
+  right: 0;
+  left: 0;
+  height: 80vh;
+
+  .e-content {
+    position: relative;
+    width: 100%;
+
+    .e-close {
+      width: 48px;
+      height: 4px;
+      border-radius: 4px;
+      position: absolute;
+      background: currentColor;
+      opacity: var(--opacity-border);
+      left: 50%;
+      top: -16px;
+      transform: translateX(-50%);
+    }
+  }
+}
