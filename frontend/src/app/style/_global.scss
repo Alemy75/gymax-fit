@@ -4,3 +4,9 @@ body {
   background-color: rgba(var(--g-theme-background));
   color: rgba(var(--g-theme-on-background));
 }
+
+button {
+  all: unset;
+  cursor: pointer;
+  display: block;
+}
