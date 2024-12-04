@@ -35,6 +35,10 @@ const Select: FC<SelectProps> = ({
     setIsOpen((prev) => !prev);
   };
 
+  const close = () => {
+    setIsOpen(false);
+  };
+
   return (
     <div className={s["g-select"]}>
       <button className={plateClass} onClick={toggleOpen}>
@@ -43,7 +47,11 @@ const Select: FC<SelectProps> = ({
         <SlArrowDown className={iconClass} />
       </button>
 
-      <Modal>content</Modal>
+      <Modal isVisible={isOpen} onClose={close}>
+        {list.map((item) => (
+          <div>{item.name}</div>
+        ))}
+      </Modal>
     </div>
   );
 };

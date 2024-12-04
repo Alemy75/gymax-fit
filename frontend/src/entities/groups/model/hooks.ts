@@ -1,49 +1,61 @@
+import { type Group, type GroupPage } from "./types";
 import { supabase } from "@/shared/api/supabase";
-import { useEffect, useState } from "react";
-import { Group } from "./types";
+import { useInfiniteQuery } from "@tanstack/react-query";
 
-export const useGroups = (): IGroupsReturn => {
-  const [groups, setGroups] = useState<Group[]>([]);
-  const [isLoading, setIsLoading] = useState<boolean>(false);
-  const [isSuccess, setIsSuccess] = useState<boolean>(false);
-  const [isError, setIsError] = useState<boolean>(false);
-
-  const getMuscles = async () => {
-    setIsLoading(true);
-    setIsSuccess(false);
-    setIsError(false);
-
-    try {
-      const { data } = await supabase
-        .from("muscle_group")
-        .select("*");
-
-      if (!data) return;
-
-      setGroups(data);
-      setIsSuccess(true);
-    } catch {
-      setIsError(true);
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
-  useEffect(() => {
-    getMuscles();
-  }, []);
-
-  return {
-    isError,
-    isLoading,
-    isSuccess,
-    data: groups
-  };
+export const keys = {
+  root: () => ["root:groups"],
+  groups: () => [...keys.root(), "groups"]
 };
 
-interface IGroupsReturn {
-  isLoading: boolean;
-  isSuccess: boolean;
-  isError: boolean;
-  data: Group[];
-}
+export const useGroups = ({ quantity }: { quantity: number }) =>
+  useInfiniteQuery<GroupPage, any, any, any, number>({
+    queryKey: keys.groups(),
+    initialPageParam: 0,
+    getNextPageParam: (lastPage, pages) =>
+      getNextPageParam(lastPage, pages, quantity),
+    queryFn: ({ pageParam }) =>
+      queryFn({ start: pageParam, quantity })
+  });
+
+export const getGroups = (options: { start: number; end: number }) =>
+  supabase
+    .from("muscle_group")
+    .select("*", { count: "exact" })
+    .range(options.start, options.end);
+
+export const getGroupsArray = (pages: GroupPage[]) => {
+  return pages.reduce<Group[]>((a, v) => {
+    a.push(...v.groups);
+
+    return a;
+  }, []);
+};
+
+const getNextPageParam = (
+  lastPage: GroupPage,
+  pages: GroupPage[],
+  quantity: number
+) => {
+  return lastPage.count > getGroupsArray(pages).length
+    ? lastPage.start + quantity
+    : null;
+};
+
+const queryFn = async ({
+  start,
+  quantity
+}: {
+  start: number;
+  quantity: number;
+}) => {
+  const { data: groups, count } = await getGroups({
+    start,
+    end: start + quantity - 1
+  });
+
+  if (!count || !groups) {
+    throw new Error("[groups]: no neccessary response");
+  }
+
+  return { count, start, groups };
+};

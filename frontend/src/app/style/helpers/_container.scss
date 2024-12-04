@@ -1,9 +1,16 @@
+$max-w: 400px;
+
 .container {
-  width: 1000px;
+  width: $max-w;
   max-width: 100%;
   margin: 0 auto;
 
-  @media (max-width: 1000px) {
+  @media (max-width: $max-w) {
     padding: 0 1rem;
   }
+}
+
+.modal-container {
+  max-width: $max-w;
+  margin: 0 auto;
 }

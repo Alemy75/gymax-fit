@@ -5,6 +5,14 @@
   left: 0;
   height: 80vh;
 
+  opacity: 1;
+  transform: translateY(100%);
+
+  &.m-visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
   .e-content {
     position: relative;
     width: 100%;

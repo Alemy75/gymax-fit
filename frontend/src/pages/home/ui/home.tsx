@@ -1,16 +1,30 @@
 import { FC, useMemo } from "react";
 import DefaultLayout from "@/widgets/default-layout";
-import { useGroups } from "@/entities/groups/model/hooks";
+import {
+  useGroups,
+  getGroupsArray
+} from "@/entities/groups/model/hooks";
 import { Select } from "@/shared/ui";
 
 const Home: FC = () => {
-  const { data, isError, isSuccess, isLoading } = useGroups();
+  const {
+    data,
+    hasNextPage,
+    isError,
+    isSuccess,
+    isLoading,
+    fetchNextPage
+  } = useGroups({
+    quantity: 2
+  });
 
   const formattedList = useMemo(() => {
-    return data.map((item) => ({
-      id: item.id,
-      name: item.name ?? ""
-    }));
+    return data
+      ? getGroupsArray(data.pages).map((item) => ({
+          id: item.id,
+          name: item.name ?? ""
+        }))
+      : [];
   }, [data]);
 
   return (
@@ -26,6 +40,10 @@ const Home: FC = () => {
           {isSuccess && <Select list={formattedList} />}
         </div>
       </div>
+
+      {hasNextPage && (
+        <button onClick={() => fetchNextPage()}>NExt</button>
+      )}
     </DefaultLayout>
   );
 };
