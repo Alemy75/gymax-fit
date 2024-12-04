@@ -15,7 +15,7 @@ const Home: FC = () => {
     isLoading,
     fetchNextPage
   } = useGroups({
-    quantity: 2
+    quantity: 10
   });
 
   const formattedList = useMemo(() => {
@@ -40,10 +40,6 @@ const Home: FC = () => {
           {isSuccess && <Select list={formattedList} />}
         </div>
       </div>
-
-      {hasNextPage && (
-        <button onClick={() => fetchNextPage()}>NExt</button>
-      )}
     </DefaultLayout>
   );
 };

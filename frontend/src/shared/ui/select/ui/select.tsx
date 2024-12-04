@@ -48,9 +48,10 @@ const Select: FC<SelectProps> = ({
       </button>
 
       <Modal isVisible={isOpen} onClose={close}>
-        {list.map((item) => (
-          <div>{item.name}</div>
-        ))}
+        any
+        {/* {list.map((item) => (
+          <button>{item.name}</button>
+        ))} */}
       </Modal>
     </div>
   );

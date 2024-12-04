@@ -26,14 +26,20 @@ const Modal: FC<ModalProps> = ({ children, isVisible, onClose }) => {
     if (modalElement.current) {
       const el = modalElement.current as HTMLDivElement;
 
-      el.addEventListener("swiped-down", (event) => {
-        console.log(event);
-      });
+      el.addEventListener("swiped-down", onClose);
+
+      return () => {
+        el.removeEventListener("swiped-down", onClose);
+      };
     }
   }, []);
 
   return createPortal(
-    <div ref={modalElement} className={modalClass}>
+    <div
+      ref={modalElement}
+      className={modalClass}
+      data-swipe-threshold="50"
+      data-swipe-ignore="false">
       <div className={s["e-content"]}>
         <button className={s["e-close"]} onClick={onClose}></button>
 
