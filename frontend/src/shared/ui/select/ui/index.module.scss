@@ -1,3 +1,5 @@
+$list-hover-bg: rgba(var(--g-theme-primary), var(--opacity-hover));
+
 .g-select {
   .e-plate {
     display: flex;
@@ -20,5 +22,20 @@
         transform: rotate(180deg);
       }
     }
+  }
+}
+
+.e-list-item {
+  box-sizing: border-box;
+  padding: 8px;
+  border-radius: 4px;
+  width: 100%;
+
+  &.m-selected {
+    background-color: $list-hover-bg;
+  }
+
+  &:hover {
+    background-color: $list-hover-bg;
   }
 }

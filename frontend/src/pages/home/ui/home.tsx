@@ -1,44 +1,46 @@
-import { FC, useMemo } from "react";
+import { FC } from "react";
 import DefaultLayout from "@/widgets/default-layout";
-import {
-  useGroups,
-  getGroupsArray
-} from "@/entities/groups/model/hooks";
+import { useGroups } from "@/entities/groups/model/hooks";
 import { Select } from "@/shared/ui";
+import { Loader } from "@/shared/ui/loader";
 
 const Home: FC = () => {
   const {
-    data,
+    list,
     hasNextPage,
     isError,
     isSuccess,
     isLoading,
     fetchNextPage
   } = useGroups({
-    quantity: 10
+    quantity: 4
   });
-
-  const formattedList = useMemo(() => {
-    return data
-      ? getGroupsArray(data.pages).map((item) => ({
-          id: item.id,
-          name: item.name ?? ""
-        }))
-      : [];
-  }, [data]);
 
   return (
     <DefaultLayout>
-      <div className="g-home container">
-        <div className="mt-4">Список групп</div>
+      <div className="g-home container pt-4">
+        {isLoading && <Loader />}
 
-        <div className="mt-2">
-          {isLoading && <div>Загрузка...</div>}
+        {!isLoading && (
+          <>
+            <div>
+              <div>Список групп</div>
 
-          {isError && <div>Произошла ошибка</div>}
+              <div className="mt-2">
+                {isSuccess && (
+                  <Select
+                    isInfinity={true}
+                    isTotal={!hasNextPage}
+                    list={list}
+                    onNext={fetchNextPage}
+                  />
+                )}
+              </div>
+            </div>
 
-          {isSuccess && <Select list={formattedList} />}
-        </div>
+            {isError && <div>Ошибка загрузки данных</div>}
+          </>
+        )}
       </div>
     </DefaultLayout>
   );

@@ -4,31 +4,48 @@
   right: 0;
   left: 0;
   height: 80vh;
+  border-radius: 16px 16px 0 0;
 
   opacity: 0;
   transform: translateY(100%);
 
-  transition: all 0.3s ease;
+  transition:
+    transform 0.3s ease,
+    opacity 0.3s ease;
 
   &.m-visible {
     opacity: 1;
     transform: translateY(0);
   }
 
-  .e-content {
+  .e-wrapper {
     position: relative;
     width: 100%;
+    height: 100%;
+
+    .e-content {
+      height: 100%;
+      overflow-y: auto;
+    }
 
     .e-close {
       width: 48px;
-      height: 4px;
-      border-radius: 4px;
+      height: 32px;
       position: absolute;
-      background: currentColor;
-      opacity: var(--opacity-border);
       left: 50%;
-      top: -16px;
+      top: -32px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
       transform: translateX(-50%);
+
+      .e-line {
+        width: 48px;
+        height: 4px;
+        border-radius: 4px;
+        background: currentColor;
+        opacity: var(--opacity-border);
+      }
     }
   }
 }

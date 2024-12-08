@@ -15,7 +15,7 @@ const Modal: FC<ModalProps> = ({ children, isVisible, onClose }) => {
     const base = `${s["e-modal"]}`;
 
     const helpers =
-      "modal-container px-4 py-4 pt-8 rounded-4 bg-background shadow-lg";
+      "modal-container px-4 py-4 pt-8 bg-background shadow-lg";
 
     const visible = isVisible ? s["m-visible"] : "";
 
@@ -40,10 +40,12 @@ const Modal: FC<ModalProps> = ({ children, isVisible, onClose }) => {
       className={modalClass}
       data-swipe-threshold="50"
       data-swipe-ignore="false">
-      <div className={s["e-content"]}>
-        <button className={s["e-close"]} onClick={onClose}></button>
+      <div className={s["e-wrapper"]}>
+        <button className={s["e-close"]} onClick={onClose}>
+          <div className={s["e-line"]} />
+        </button>
 
-        {children}
+        <div className={s["e-content"]}>{children}</div>
       </div>
     </div>,
     document.body

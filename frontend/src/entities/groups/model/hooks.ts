@@ -1,14 +1,15 @@
 import { type Group, type GroupPage } from "./types";
 import { supabase } from "@/shared/api/supabase";
 import { useInfiniteQuery } from "@tanstack/react-query";
+import { useMemo } from "react";
 
 export const keys = {
   root: () => ["root:groups"],
   groups: () => [...keys.root(), "groups"]
 };
 
-export const useGroups = ({ quantity }: { quantity: number }) =>
-  useInfiniteQuery<GroupPage, any, any, any, number>({
+export const useGroups = ({ quantity }: { quantity: number }) => {
+  const query = useInfiniteQuery<GroupPage, any, any, any, number>({
     queryKey: keys.groups(),
     initialPageParam: 0,
     getNextPageParam: (lastPage, pages) =>
@@ -16,6 +17,21 @@ export const useGroups = ({ quantity }: { quantity: number }) =>
     queryFn: ({ pageParam }) =>
       queryFn({ start: pageParam, quantity })
   });
+
+  const list = useMemo(() => {
+    return query.data
+      ? getGroupsArray(query.data.pages).map((item) => ({
+          id: item.id,
+          name: item.name ?? ""
+        }))
+      : [];
+  }, [query.data]);
+
+  return {
+    ...query,
+    list
+  };
+};
 
 export const getGroups = (options: { start: number; end: number }) =>
   supabase
