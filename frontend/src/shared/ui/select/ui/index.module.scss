@@ -17,6 +17,7 @@ $list-hover-bg: rgba(var(--g-theme-primary), var(--opacity-hover));
       );
 
     .e-arrow {
+      color: rgba(var(--g-theme-primary));
       transition: transform 0.2s ease;
       &.m-arrow-rotated {
         transform: rotate(180deg);

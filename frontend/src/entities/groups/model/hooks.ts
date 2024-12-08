@@ -1,7 +1,8 @@
-import { type Group, type GroupPage } from "./types";
-import { supabase } from "@/shared/api/supabase";
+import { type GroupPage } from "./types";
 import { useInfiniteQuery } from "@tanstack/react-query";
 import { useMemo } from "react";
+import { getGroups } from "../api";
+import { getGroupsArray } from "../lib";
 
 export const keys = {
   root: () => ["root:groups"],
@@ -12,10 +13,21 @@ export const useGroups = ({ quantity }: { quantity: number }) => {
   const query = useInfiniteQuery<GroupPage, any, any, any, number>({
     queryKey: keys.groups(),
     initialPageParam: 0,
-    getNextPageParam: (lastPage, pages) =>
-      getNextPageParam(lastPage, pages, quantity),
-    queryFn: ({ pageParam }) =>
-      queryFn({ start: pageParam, quantity })
+    getNextPageParam: (lastPage, pages) => {
+      return lastPage.count > getGroupsArray(pages).length
+        ? lastPage.start + quantity
+        : null;
+    },
+    queryFn: async ({ pageParam: start }) => {
+      const end = start + quantity - 1;
+      const { data, count } = await getGroups({ start, end });
+
+      if (!count || !data) {
+        throw new Error("[groups]: no neccessary response");
+      }
+
+      return { count, start, groups: data };
+    }
   });
 
   const list = useMemo(() => {
@@ -31,47 +43,4 @@ export const useGroups = ({ quantity }: { quantity: number }) => {
     ...query,
     list
   };
-};
-
-export const getGroups = (options: { start: number; end: number }) =>
-  supabase
-    .from("muscle_group")
-    .select("*", { count: "exact" })
-    .range(options.start, options.end);
-
-export const getGroupsArray = (pages: GroupPage[]) => {
-  return pages.reduce<Group[]>((a, v) => {
-    a.push(...v.groups);
-
-    return a;
-  }, []);
-};
-
-const getNextPageParam = (
-  lastPage: GroupPage,
-  pages: GroupPage[],
-  quantity: number
-) => {
-  return lastPage.count > getGroupsArray(pages).length
-    ? lastPage.start + quantity
-    : null;
-};
-
-const queryFn = async ({
-  start,
-  quantity
-}: {
-  start: number;
-  quantity: number;
-}) => {
-  const { data: groups, count } = await getGroups({
-    start,
-    end: start + quantity - 1
-  });
-
-  if (!count || !groups) {
-    throw new Error("[groups]: no neccessary response");
-  }
-
-  return { count, start, groups };
 };
